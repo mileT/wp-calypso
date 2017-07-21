@@ -24,6 +24,7 @@ import { http } from 'state/data-layer/wpcom-http/actions';
 import { dispatchRequest } from 'state/data-layer/wpcom-http/utils';
 import { SIMPLE_PAYMENTS_PRODUCT_POST_TYPE } from 'lib/simple-payments/constants';
 import { isValidSimplePaymentsProduct } from 'lib/simple-payments/utils';
+import { getFeaturedImageId } from 'lib/posts/utils';
 
 /**
  * Reduce function for product attributes stored in post metadata
@@ -49,7 +50,7 @@ export function customPostToProduct( product ) {
 			ID: product.ID,
 			description: product.content,
 			title: product.title,
-			featuredImage: product.featured_image
+			featuredImageId: getFeaturedImageId( product ),
 		},
 		product.metadata.reduce( reduceMetadata, {} ),
 	);
@@ -82,7 +83,7 @@ export function productToCustomPost( product ) {
 			metadata: [],
 			title: product.title,
 			content: product.description,
-			featured_image: product.featuredImage ? product.featuredImage : '',
+			featured_image: product.featuredImageId ? product.featuredImageId : '',
 		},
 	);
 }
