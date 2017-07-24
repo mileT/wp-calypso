@@ -3,13 +3,14 @@
  */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { FormSection, formValueSelector, reduxForm } from 'redux-form';
+import { FormSection, formValueSelector, isDirty, reduxForm } from 'redux-form';
 import { localize } from 'i18n-calypso';
 import { flowRight } from 'lodash';
 
 /**
  * Internal dependencies
  */
+import { ProtectFormGuard } from 'lib/protect-form';
 import Card from 'components/card';
 import ExternalLink from 'components/external-link';
 import FormButton from 'components/forms/form-button';
@@ -20,6 +21,8 @@ import ReduxFormRadio from 'components/redux-forms/redux-form-radio';
 import ReduxFormTextInput from 'components/redux-forms/redux-form-text-input';
 import ReduxFormToggle from 'components/redux-forms/redux-form-toggle';
 import SectionHeader from 'components/section-header';
+
+const form = 'jobListings';
 
 class JobListings extends Component {
 	static propTypes = {
@@ -36,6 +39,7 @@ class JobListings extends Component {
 		const {
 			handleSubmit,
 			isDisabled,
+			dirty,
 			isSaving,
 			perPage,
 			translate
@@ -44,6 +48,8 @@ class JobListings extends Component {
 		return (
 			<div>
 				<form>
+					<ProtectFormGuard isChanged={ dirty } />
+
 					<FormSection name="listings">
 						<SectionHeader label={ translate( 'Listings' ) }>
 							<FormButton compact
@@ -274,9 +280,10 @@ class JobListings extends Component {
 
 const connectComponent = connect(
 	( state ) => {
-		const selector = formValueSelector( 'jobListings', () => state.extensions.wpJobManager.form );
+		const selector = formValueSelector( form, () => state.extensions.wpJobManager.form );
 
 		return {
+			dirty: isDirty( form ),
 			perPage: selector( state, 'listings.perPage' ),
 		};
 	}
@@ -284,7 +291,7 @@ const connectComponent = connect(
 
 const createReduxForm = reduxForm( {
 	enableReinitialize: true,
-	form: 'jobListings',
+	form,
 	getFormState: state => state.extensions.wpJobManager.form,
 } );
 

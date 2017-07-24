@@ -3,13 +3,14 @@
  */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { FormSection, formValueSelector, reduxForm } from 'redux-form';
+import { FormSection, formValueSelector, isDirty, reduxForm } from 'redux-form';
 import { localize } from 'i18n-calypso';
 import { flowRight } from 'lodash';
 
 /**
  * Internal dependencies
  */
+import { ProtectFormGuard } from 'lib/protect-form';
 import Card from 'components/card';
 import FormButton from 'components/forms/form-button';
 import FormFieldset from 'components/forms/form-fieldset';
@@ -20,6 +21,8 @@ import ReduxFormSelect from 'components/redux-forms/redux-form-select';
 import ReduxFormTextInput from 'components/redux-forms/redux-form-text-input';
 import ReduxFormToggle from 'components/redux-forms/redux-form-toggle';
 import SectionHeader from 'components/section-header';
+
+const form = 'submission';
 
 class JobSubmission extends Component {
 	static propTypes = {
@@ -38,6 +41,7 @@ class JobSubmission extends Component {
 			enableRegistration,
 			handleSubmit,
 			isDisabled,
+			dirty,
 			isSaving,
 			submissionDuration,
 			translate,
@@ -46,6 +50,8 @@ class JobSubmission extends Component {
 		return (
 			<div>
 				<form>
+					<ProtectFormGuard isChanged={ dirty } />
+
 					<FormSection name="account">
 						<SectionHeader label={ translate( 'Account' ) }>
 							<FormButton compact
@@ -230,10 +236,11 @@ class JobSubmission extends Component {
 
 const connectComponent = connect(
 	( state ) => {
-		const selector = formValueSelector( 'submission', () => state.extensions.wpJobManager.form );
+		const selector = formValueSelector( form, () => state.extensions.wpJobManager.form );
 
 		return {
 			enableRegistration: selector( state, 'account.enableRegistration' ),
+			dirty: isDirty( form ),
 			submissionDuration: selector( state, 'duration.submissionDuration' ),
 		};
 	}
@@ -241,7 +248,7 @@ const connectComponent = connect(
 
 const createReduxForm = reduxForm( {
 	enableReinitialize: true,
-	form: 'submission',
+	form,
 	getFormState: state => state.extensions.wpJobManager.form,
 } );
 
