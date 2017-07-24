@@ -2,6 +2,7 @@
  * External dependencies
  */
 import React from 'react';
+import { localize } from 'i18n-calypso';
 
 /**
  * Internal dependencies
@@ -28,6 +29,7 @@ const Unlocked = React.createClass( {
 			hasPrivacyProtection,
 			pendingTransfer,
 			domainLockingAvailable,
+			translate,
 		} = getSelectedDomain( this.props );
 
 		this.setState( { submitting: true } );
@@ -47,22 +49,22 @@ const Unlocked = React.createClass( {
 
 				switch ( error.error ) {
 					case 'enable_private_reg_failed':
-						errorMessage = this.translate( 'We were unable to enable Privacy Protection for your domain. ' +
+						errorMessage = translate( 'We were unable to enable Privacy Protection for your domain. ' +
 							'Please try again or {{contactLink}}Contact Support{{/contactLink}} if you continue to have trouble.',
 							{ components: { contactLink } } );
 						break;
 					case 'decline_transfer_failed':
-						errorMessage = this.translate( 'We were unable to stop the transfer for your domain. ' +
+						errorMessage = translate( 'We were unable to stop the transfer for your domain. ' +
 							'Please try again or {{contactLink}}Contact Support{{/contactLink}} if you continue to have trouble.',
 							{ components: { contactLink } } );
 						break;
 					case 'lock_domain_failed':
-						errorMessage = this.translate( 'We were unable to lock your domain. ' +
+						errorMessage = translate( 'We were unable to lock your domain. ' +
 							'Please try again or {{contactLink}}Contact Support{{/contactLink}} if you continue to have trouble.',
 							{ components: { contactLink } } );
 						break;
 					default:
-						errorMessage = this.translate(
+						errorMessage = translate(
 							'Oops! Something went wrong and your request could not be ' +
 							'processed. Please try again or {{contactLink}}Contact Support{{/contactLink}} if ' +
 							'you continue to have trouble.', { components: { contactLink } }
@@ -73,16 +75,16 @@ const Unlocked = React.createClass( {
 			} else {
 				let successMessage;
 				if ( enablePrivacy && domainLockingAvailable ) {
-					successMessage = this.translate( 'We\'ve canceled your domain transfer. Your domain is now re-locked and ' +
+					successMessage = translate( 'We\'ve canceled your domain transfer. Your domain is now re-locked and ' +
 						'Privacy Protection has been enabled.' );
 				} else if ( enablePrivacy ) {
-					successMessage = this.translate( 'We\'ve canceled your domain transfer and ' +
+					successMessage = translate( 'We\'ve canceled your domain transfer and ' +
 						'Privacy Protection has been re-enabled.' );
 				} else if ( domainLockingAvailable ) {
-					successMessage = this.translate( 'We\'ve canceled your domain transfer and ' +
+					successMessage = translate( 'We\'ve canceled your domain transfer and ' +
 						're-locked your domain.' );
 				} else {
-					successMessage = this.translate( 'We\'ve canceled your domain transfer. ' );
+					successMessage = translate( 'We\'ve canceled your domain transfer. ' );
 				}
 
 				notices.success( successMessage );
@@ -117,33 +119,34 @@ const Unlocked = React.createClass( {
 			hasPrivacyProtection,
 			manualTransferRequired,
 			pendingTransfer,
-			domainLockingAvailable
+			domainLockingAvailable,
+			translate,
 		} = getSelectedDomain( this.props );
 
 		let domainStateMessage;
 
 		if ( pendingTransfer ) {
-			domainStateMessage = this.translate( 'Your domain is pending transfer.' );
+			domainStateMessage = translate( 'Your domain is pending transfer.' );
 		} else if ( domainLockingAvailable && hasPrivacyProtection && ! privateDomain ) {
-			domainStateMessage = this.translate( 'Your domain is unlocked and Privacy Protection has been disabled' +
+			domainStateMessage = translate( 'Your domain is unlocked and Privacy Protection has been disabled' +
 				' to prepare for transfer.' );
 		} else if ( domainLockingAvailable ) {
-			domainStateMessage = this.translate( 'Your domain is unlocked to prepare for transfer.' );
+			domainStateMessage = translate( 'Your domain is unlocked to prepare for transfer.' );
 		}
 		// Otherwise, don't say anything
 
 		return (
 			<div>
-				<SectionHeader label={ this.translate( 'Transfer Domain' ) } className="transfer__section-header">
+				<SectionHeader label={ translate( 'Transfer Domain' ) } className="transfer-out__section-header">
 					<Button
 							onClick={ this.handleCancelTransferClick }
 							disabled={ this.state.submitting }
-							compact>{ this.translate( 'Cancel Transfer' ) }</Button>
+							compact>{ translate( 'Cancel Transfer' ) }</Button>
 					{ ! manualTransferRequired && <Button
 							onClick={ this.handleResendConfirmationCodeClick }
 							disabled={ this.state.submitting }
 							compact
-							primary>{ this.translate( 'Resend Transfer Code' ) }</Button> }
+							primary>{ translate( 'Resend Transfer Code' ) }</Button> }
 				</SectionHeader>
 
 				<Card className="transfer-card">
@@ -152,16 +155,16 @@ const Unlocked = React.createClass( {
 						<p>
 							{
 								! manualTransferRequired
-								? this.translate( 'We have sent the transfer authorization code to the domain registrant\'s' +
+								? translate( 'We have sent the transfer authorization code to the domain registrant\'s' +
 									' email address. You must provide your registrar with your domain name and transfer code to complete' +
 									' the transfer process.' )
-								: this.translate( 'The registry for your domain requires a special process for transfers. ' +
+								: translate( 'The registry for your domain requires a special process for transfers. ' +
 									'Our Happiness Engineers have been notified about your transfer request and will be in touch ' +
 									'shortly to help you complete the process.' )
 							} <a
 							href={ support.TRANSFER_DOMAIN_REGISTRATION }
 							target="_blank"
-							rel="noopener noreferrer">{ this.translate( 'Learn More.' ) }</a>
+							rel="noopener noreferrer">{ translate( 'Learn More.' ) }</a>
 						</p>
 					</div>
 				</Card>
@@ -169,4 +172,4 @@ const Unlocked = React.createClass( {
 		);
 	}
 } );
-export default Unlocked;
+export default localize( Unlocked );
