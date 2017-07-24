@@ -11,6 +11,7 @@ import titlecase from 'to-title-case';
 import { getSiteFragment, sectionify } from 'lib/route';
 import { renderWithReduxStore } from 'lib/react-helpers';
 import Settings from '../components/settings';
+import ZoneCreator from '../components/settings/zone-creator';
 
 export const renderTab = ( component ) => ( context ) => {
 	const siteId = getSiteFragment( context.path );
@@ -26,7 +27,9 @@ export const renderTab = ( component ) => ( context ) => {
 
 	if ( zone.length ) {
 		analyticsPageTitle += ` > ${ titlecase( zone ) }`;
-	} else {
+	}
+
+	if ( ZoneCreator === typeof component ) {
 		analyticsPageTitle += ' > New Zone';
 	}
 
