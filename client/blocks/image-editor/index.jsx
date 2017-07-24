@@ -205,7 +205,7 @@ const ImageEditor = React.createClass( {
 				showDismiss={ true }
 				text={ this.state.canvasError }
 				isCompact={ false }
-				onDismissClick={ this.props.onImageEditorCancel } 	/>
+				onDismissClick={ this.onCancel } />
 		);
 	},
 
