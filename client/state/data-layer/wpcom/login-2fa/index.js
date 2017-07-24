@@ -2,7 +2,7 @@
  * External dependencies
  */
 import request from 'superagent';
-import defer from 'lodash/defer';
+import { defer, get } from 'lodash';
 
 /**
  * Internal dependencies
@@ -50,11 +50,16 @@ const doAppPushRequest = ( store ) => {
 		} ).then( () => {
 			store.dispatch( { type: TWO_FACTOR_AUTHENTICATION_PUSH_POLL_COMPLETED } );
 		} ).catch( error => {
-			store.dispatch( {
-				type: TWO_FACTOR_AUTHENTICATION_UPDATE_NONCE,
-				nonceType: 'push',
-				twoStepNonce: error.response.body.data.two_step_nonce
-			} );
+			const twoStepNonce = get( error, 'response.body.data.two_step_nonce' );
+
+			if ( twoStepNonce ) {
+				store.dispatch( {
+					type: TWO_FACTOR_AUTHENTICATION_UPDATE_NONCE,
+					nonceType: 'push',
+					twoStepNonce
+				} );
+			}
+
 			return Promise.reject( error );
 		} );
 };
