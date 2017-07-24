@@ -33,4 +33,4 @@ export function login( { isNative, locale, redirectTo, twoFactorAuthType, social
 	}
 
 	return url;
-};
+}

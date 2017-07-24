@@ -20,6 +20,7 @@ import FormTextInput from 'components/forms/form-text-input';
 import FormCheckbox from 'components/forms/form-checkbox';
 import { getCurrentQueryArguments } from 'state/ui/selectors';
 import { loginUser, formUpdate } from 'state/login/actions';
+import { preventWidows } from 'lib/formatting';
 import { recordTracksEvent } from 'state/analytics/actions';
 import {
 	getRequestError,
