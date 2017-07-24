@@ -2,6 +2,7 @@
  * External dependencies
  */
 import { translate } from 'i18n-calypso';
+import { initialize } from 'redux-form';
 
 /**
  * Internal dependencies
@@ -46,7 +47,8 @@ export const saveSettings = ( { dispatch, getState }, action ) => {
 	}, action ) );
 };
 
-export const announceSuccess = ( { dispatch }, { siteId } ) => {
+export const announceSuccess = ( { dispatch }, { form, siteId }, next, { data } ) => {
+	dispatch( initialize( form, fromApi( data ) ) );
 	dispatch( saveSuccess( siteId ) );
 	dispatch( successNotice( translate(
 		'Settings saved!' ),
